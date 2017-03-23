@@ -17,12 +17,13 @@ class Collector(threading.Thread):
         self.lock = threading.Lock()
         self.events = []
 
-
     def run(self):
         while self.running:
-            time.sleep(self.flush_rate)
-
-            self.flush()
+            try:
+                time.sleep(self.flush_rate)
+                self.flush()
+            except KeyboardInterrupt:
+                self.running = False
 
     def log(self, path, temp):
         self.lock.acquire()
@@ -52,4 +53,9 @@ c.start()
 while True:
     c.log(config["metrics"]["path"], temp_provider.temp())
 
-    time.sleep(config["sample-rate"])
+    try:
+        time.sleep(config["sample-rate"])
+    except KeyboardInterrupt:
+        break
+
+c.join()
