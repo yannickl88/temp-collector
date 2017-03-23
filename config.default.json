@@ -7,6 +7,7 @@
   "flush-rate" : 60,
   "persistence": {
     "name"     : "yannickl88",
+    "url"      : "https://some.url/api/update/",
     "username" : "username",
     "password" : "password"
   }

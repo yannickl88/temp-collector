@@ -15,16 +15,20 @@ class TemperaturePersister:
         key = config["persistence"]["name"]
 
         if key == "yannickl88":
-            return Yannickl88Persister(config["persistence"]["username"], config["persistence"]["password"])
+            return Yannickl88Persister(
+                config["persistence"]["url"],
+                config["persistence"]["username"],
+                config["persistence"]["password"]
+            )
 
         raise IndexError("Unknown key provider key %s given.")
 
 
 class Yannickl88Persister(TemperaturePersister):
-    def __init__(self, username, password):
+    def __init__(self, url, username, password):
         TemperaturePersister.__init__(self)
 
-        self.url = "https://temp.yannickl88.nl/api/update/"
+        self.url = url
         self.headers = {
             'cache-control': "no-cache",
             'Authorization': 'Basic %s' % base64.b64encode(bytes(username + ':' + password)).decode("ascii")
