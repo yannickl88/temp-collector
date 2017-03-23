@@ -2,6 +2,7 @@
 
 import threading
 import time
+from datetime import datetime
 import json
 
 import providers
@@ -30,7 +31,8 @@ class Collector(threading.Thread):
     def log(self, path, temp):
         self.lock.acquire()
 
-        self.events.append((path, temp, int(time.time())))
+        timestamp = (datetime.now() - datetime(1970, 1, 1)).total_seconds()
+        self.events.append((path, temp, int(timestamp)))
 
         self.lock.release()
 
