@@ -1,0 +1,13 @@
+{
+  "metrics": {
+    "path": "path",
+    "provider" : "dummy"
+  },
+  "sample-rate" : 30,
+  "flush-rate" : 60,
+  "persistence": {
+    "name"     : "yannickl88",
+    "username" : "username",
+    "password" : "password"
+  }
+}
