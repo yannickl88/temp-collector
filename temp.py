@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
+import json
+import os
 import threading
 import time
 from datetime import datetime
-import json
 
-import providers
 import persisters
+import providers
 
 
 class Collector(threading.Thread):
@@ -45,7 +46,7 @@ class Collector(threading.Thread):
         self.lock.release()
 
 
-with open('config.json') as config_file:
+with open(os.path.dirname(__file__) + os.sep + 'config.json') as config_file:
     config = json.load(config_file)
 
 temp_provider = providers.TemperatureProvider.get(config)
