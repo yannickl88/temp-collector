@@ -24,7 +24,7 @@ class Yannickl88Persister(TemperaturePersister):
     def __init__(self, username, password):
         TemperaturePersister.__init__(self)
 
-        self.url = "http://temp.dev/app_dev.php/api/update/"
+        self.url = "https://temp.yannickl88.nl/api/update/"
         self.headers = {
             'cache-control': "no-cache",
             'Authorization': 'Basic %s' % base64.b64encode(bytes(username + ':' + password)).decode("ascii")
