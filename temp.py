@@ -20,7 +20,9 @@ class Collector(threading.Thread):
     def run(self):
         while self.running:
             try:
-                time.sleep(self.flush_rate)
+                for i in range(self.flush_rate):
+                    time.sleep(1)
+
                 self.flush()
             except KeyboardInterrupt:
                 self.running = False
@@ -54,7 +56,8 @@ while True:
     c.log(config["metrics"]["path"], temp_provider.temp())
 
     try:
-        time.sleep(config["sample-rate"])
+        for j in range(config["sample-rate"]):
+            time.sleep(1)
     except KeyboardInterrupt:
         break
 
