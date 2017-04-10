@@ -48,7 +48,9 @@ class Yannickl88Persister(TemperaturePersister):
                 return False
 
         except urllib2.URLError as e:
-            print "Server responded with 500 status."
+            print "Server responded with 500 status. Buffer has %s events pending." % len(items)
+            print e.reason
+
             return False
 
         return True

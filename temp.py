@@ -11,10 +11,11 @@ import providers
 
 
 class Collector(threading.Thread):
-    def __init__(self, persister, flush_rate=10):
+    def __init__(self, persister, flush_rate=10, ttl=300):
         threading.Thread.__init__(self)
         self.persister = persister
         self.flush_rate = flush_rate
+        self.ttl = ttl
         self.running = True
         self.lock = threading.Lock()
         self.events = []
@@ -32,13 +33,21 @@ class Collector(threading.Thread):
     def log(self, path, temp):
         self.lock.acquire()
 
-        timestamp = (datetime.now() - datetime(1970, 1, 1)).total_seconds()
-        self.events.append((path, temp, int(timestamp)))
+        self.events.append((path, temp, Collector.time()))
 
         self.lock.release()
 
+    @staticmethod
+    def time():
+        return int((datetime.now() - datetime(1970, 1, 1)).total_seconds())
+
     def flush(self):
         self.lock.acquire()
+
+        # Remove any older events.
+        if self.ttl > 0:
+            now = Collector.time()
+            self.events = [x for x in self.events if now - x[2] < self.ttl]
 
         if self.persister.persist(self.events):
             del self.events[:]
@@ -52,7 +61,7 @@ with open(os.path.dirname(__file__) + os.sep + 'config.json') as config_file:
 temp_provider = providers.TemperatureProvider.get(config)
 temp_persister = persisters.TemperaturePersister.get(config)
 
-c = Collector(temp_persister, config["flush-rate"])
+c = Collector(temp_persister, config["flush-rate"], config["ttl"])
 c.start()
 
 while True:
